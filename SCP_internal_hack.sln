@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SCP_internal_hack", "SCP_internal_hack.vcxproj", "{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui DirectX 11 Kiero Hook", "..\..\ImGui-DirectX-11-Kiero-Hook\ImGui DirectX 11 Kiero Hook\ImGui DirectX 11 Kiero Hook.vcxproj", "{04B17470-CB82-4724-904B-25445926AB86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Debug|x64.ActiveCfg = Debug|x64
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Debug|x64.Build.0 = Debug|x64
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Debug|x86.ActiveCfg = Debug|Win32
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Debug|x86.Build.0 = Debug|Win32
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Release|x64.ActiveCfg = Release|x64
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Release|x64.Build.0 = Release|x64
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Release|x86.ActiveCfg = Release|Win32
+		{B888DFE9-1E0C-4DE9-B197-E770EC4154B7}.Release|x86.Build.0 = Release|Win32
+		{04B17470-CB82-4724-904B-25445926AB86}.Debug|x64.ActiveCfg = Debug|x64
+		{04B17470-CB82-4724-904B-25445926AB86}.Debug|x64.Build.0 = Debug|x64
+		{04B17470-CB82-4724-904B-25445926AB86}.Debug|x86.ActiveCfg = Debug|Win32
+		{04B17470-CB82-4724-904B-25445926AB86}.Debug|x86.Build.0 = Debug|Win32
+		{04B17470-CB82-4724-904B-25445926AB86}.Release|x64.ActiveCfg = Release|x64
+		{04B17470-CB82-4724-904B-25445926AB86}.Release|x64.Build.0 = Release|x64
+		{04B17470-CB82-4724-904B-25445926AB86}.Release|x86.ActiveCfg = Release|Win32
+		{04B17470-CB82-4724-904B-25445926AB86}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E6E12EF-EAD7-4016-85AB-6F7812B70B7C}
+	EndGlobalSection
+EndGlobal
