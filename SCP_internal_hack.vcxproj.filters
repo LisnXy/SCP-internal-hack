@@ -102,6 +102,9 @@
     <ClInclude Include="il2cpp.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Esp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -153,6 +156,9 @@
       <Filter>kiero</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Esp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

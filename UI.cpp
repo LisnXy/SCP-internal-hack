@@ -1,6 +1,9 @@
 #include "includes.h"
 #include "hack.h"
 #include "hooks.h"
+#include "UI.h"
+#include <string>
+#include "Esp.h"
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Present oPresent;
@@ -33,10 +36,14 @@ float hack::SpreadPredictability = 1;
 /*
 * controller of the hack
 */
-bool show = true;
+bool show = true; // whether to show the menu
+bool showArmMenu = false;
 bool enable_noCameraShake = true;
 bool enable_ArmSet = true;
+bool enable_Esp = true;
 namespace UI {
+	std::string Font_MSYH = "C:\\Windows\\Fonts\\msyh.ttc";
+
 	void checkFeatures() {
 		if (enable_noCameraShake) {
 			hook::enableAddEffect();
@@ -57,6 +64,15 @@ namespace UI {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+		ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msyh.ttc", 15.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
+		io.Fonts->Fonts[0] = font;
+		// check if font is loaded
+		if (font != NULL) {
+			printf("[imgui]Font loaded!\n");
+		}
+		else {
+			printf("[imgui]Font load failed!\n");
+		}
 		ImGui_ImplWin32_Init(window);
 		ImGui_ImplDX11_Init(pDevice, pContext);
 	}
@@ -86,47 +102,31 @@ namespace UI {
 				oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
 				InitImGui();
 				init = true;
+				printf("[imgui]ImGui initialized!\n");
 			}
-
-			else
+			else {
 				return oPresent(pSwapChain, SyncInterval, Flags);
+			}
 		}
 
 		// toggle the visibility of the cheat menu
 		if (GetAsyncKeyState(VK_INSERT) & 1) {
 			show = !show;
 		}
-
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 		if (show) {
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-			ImGui::Begin("Lisn SCP Internal Hack");
-			ImGui::Text("press INSERT to toggle menu");
-			ImGui::Checkbox("No Camera Shake", &enable_noCameraShake);
-			ImGui::Checkbox("Arm Settings enable", &enable_ArmSet);
-			//ImGui::SliderFloat("Health", &hack::health, 0, 100);
-			ImGui::SliderFloat("AdsInaccuracyMultiplier", &hack::AdsInaccuracyMultiplier, 0, 1);
-			ImGui::SliderFloat("AdsRecoilMultiplier", &hack::AdsRecoilMultiplier, 0, 1);
-			ImGui::SliderFloat("AdsSpeedMultiplier", &hack::AdsSpeedMultiplier, 1, 5);
-			ImGui::SliderFloat("AmmoConsumptionMultiplier", &hack::AmmoConsumptionMultiplier, 0, 1);
-			ImGui::SliderFloat("BulletInaccuracyMultiplier", &hack::BulletInaccuracyMultiplier, 0, 1);
-			ImGui::SliderFloat("DamageMultiplier", &hack::DamageMultiplier, 1, 5);
-			ImGui::SliderFloat("FireRateMultiplier", &hack::FireRateMultiplier, 1, 5);
-			ImGui::SliderFloat("HipInaccuracyMultiplier", &hack::HipInaccuracyMultiplier, 0, 1);
-			ImGui::SliderFloat("OverallRecoilMultiplier", &hack::OverallRecoilMultiplier, 0, 1);
-			ImGui::SliderFloat("PenetrationMultiplier", &hack::PenetrationMultiplier, 1, 5);
-			ImGui::SliderFloat("ReloadSpeedMultiplier", &hack::ReloadSpeedMultiplier, 1, 5);
-			ImGui::SliderFloat("SpreadMultiplier", &hack::SpreadMultiplier, 0, 1);
-			ImGui::SliderFloat("SpreadPredictability", &hack::SpreadPredictability, 0, 1);
-
-			checkFeatures();
-			ImGui::End();
-			ImGui::Render();
-
-			pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			drawImgui();
 		}
+		if (enable_Esp) {
+			drawEsp();
+		}
+		ImGui::Render();
+		pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		// check if user change the config of the hack.
+		checkFeatures();
 
 		return oPresent(pSwapChain, SyncInterval, Flags);
 	}
@@ -140,8 +140,36 @@ namespace UI {
 			{
 				kiero::bind(8, (void**)&oPresent, hkPresent);
 				init_hook = true;
+				printf("[imgui]d3D11 hooked!\n");
 			}
 		} while (!init_hook);
 		return TRUE;
+	}
+
+	void drawImgui() {
+		ImGui::Begin("Lisn SCP Internal Hack");
+		ImGui::Text("press INSERT to toggle menu");
+		ImGui::Checkbox("No Camera Shake", &enable_noCameraShake);
+		ImGui::Checkbox("Arm Settings enable", &enable_ArmSet);
+		ImGui::Checkbox("Open Arm Menu", &showArmMenu);
+		ImGui::Checkbox("Esp", &enable_Esp);
+		if (showArmMenu) {
+			ImGui::Begin("Arm Setting");
+			ImGui::SliderFloat("AdsInaccuracyMultiplier", &hack::AdsInaccuracyMultiplier, 0, 1);
+			ImGui::SliderFloat("AdsRecoilMultiplier", &hack::AdsRecoilMultiplier, 0, 1);
+			ImGui::SliderFloat("AdsSpeedMultiplier", &hack::AdsSpeedMultiplier, 1, 5);
+			ImGui::SliderFloat("AmmoConsumptionMultiplier", &hack::AmmoConsumptionMultiplier, 0, 1);
+			ImGui::SliderFloat("BulletInaccuracyMultiplier", &hack::BulletInaccuracyMultiplier, 0, 1);
+			ImGui::SliderFloat("DamageMultiplier", &hack::DamageMultiplier, 1, 5);
+			ImGui::SliderFloat("FireRateMultiplier", &hack::FireRateMultiplier, 1, 5);
+			ImGui::SliderFloat("HipInaccuracyMultiplier", &hack::HipInaccuracyMultiplier, 0, 1);
+			ImGui::SliderFloat("OverallRecoilMultiplier", &hack::OverallRecoilMultiplier, 0, 1);
+			ImGui::SliderFloat("PenetrationMultiplier", &hack::PenetrationMultiplier, 1, 5);
+			ImGui::SliderFloat("ReloadSpeedMultiplier", &hack::ReloadSpeedMultiplier, 1, 5);
+			ImGui::SliderFloat("SpreadMultiplier", &hack::SpreadMultiplier, 0, 1);
+			ImGui::SliderFloat("SpreadPredictability", &hack::SpreadPredictability, 0, 1);
+			ImGui::End();
+		}
+		ImGui::End();
 	}
 }

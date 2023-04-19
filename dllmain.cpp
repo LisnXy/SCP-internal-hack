@@ -2,7 +2,7 @@
 #include "pch.h"
 #include <cstdio>
 #include "UI.h"
-
+#include "MinHook.h"
 uintptr_t GameAssemblyAddress = 0;
 HMODULE GameAssembly = NULL;
 
@@ -13,7 +13,6 @@ void CreateConsole() {
 }
 
 void init() {
-	CreateConsole();
 	// find the base address of "GameAssembly.dll"
 	GameAssembly = GetModuleHandleA("GameAssembly.dll");
 	while (GameAssembly == NULL) {
@@ -26,6 +25,13 @@ void init() {
 }
 
 void main(LPVOID lpReserved) {
+	CreateConsole();
+	// 卸载所有钩子
+	MH_DisableHook(MH_ALL_HOOKS);
+	MH_RemoveHook(MH_ALL_HOOKS);
+	// 取消初始化 MinHook 库
+	MH_Uninitialize();
+	MH_Initialize();
 	UI::InitUI(lpReserved);
 	init();
 	hook::enableAddEffect();
